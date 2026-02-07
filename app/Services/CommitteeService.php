@@ -26,6 +26,21 @@ class CommitteeService{
         });
         return $findAll;
     }
+
+    public function update(string $id, array $committee){
+        $idDecrypted = Crypt::decrypt($id);
+        $duplicado = Committee::where([
+            ['id', '!=', $idDecrypted],
+            ['committeeName', '=', $committee['committeeName']],
+            ['googleMaps', '=', $committee['googleMaps']]
+        ])->first();
+        if($duplicado){
+            return false;
+        }else{
+            return Committee::where('id', '=', $idDecrypted)->update($committee);
+        }
+
+    }
 }
 
 

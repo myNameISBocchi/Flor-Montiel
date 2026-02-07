@@ -24,3 +24,4 @@ Route::delete('/councils/{id}',[CouncilController::class, 'delete']);
 
 Route::post('/committes',[CommitteeController::class, 'store']);
 Route::get('/committes',[CommitteeController::class, 'findAll']);
+Route::put('/committes/{id}',[CommitteeController::class, 'update']);

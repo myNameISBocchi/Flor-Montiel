@@ -23,7 +23,7 @@ class CommitteeController extends Controller
             'error' => 1,
             'msg' => 'duplicado'
             ];
-            return response()->json($res,200);
+            return response()->json($res,500);
         }
         }catch(\Exception $e){
             dd($e);
@@ -45,5 +45,28 @@ class CommitteeController extends Controller
             return response()->json(['error' => 500, 'msg' => 'error del servidor']);
 
         }
+    }
+
+    public function update(string $id, Request $req){
+        try{
+        $update = $this->committeeService->update($id, $req->input());
+        if($update){
+            $res = [
+            'error' => 0,
+            'msg' => 'update'
+            ];
+            return response()->json($res,200);
+        } else{
+            $res = [
+                'error' => 1,
+                'msg' => 'duplicado'
+            ];
+            return response()->json($res,500);
+        }
+        }catch(\Exception $e){
+            return response()->json(['error' => 500, 'msg' => 'error del servidor']);
+
+        }
+
     }
 }
