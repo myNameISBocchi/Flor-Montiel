@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('firstName');
+            $table->string('lastName');
             $table->string('email')->unique();
             $table->string('identification');
             $table->string('phone');
@@ -31,7 +32,8 @@ return new class extends Migration
             $table->foreignId('roleId')->constrained(
                 table:'roles', indexName:'users_roles_id'
             );
-            $table->boolean('status');
+            $table->string('photoUser')->nullable();
+            $table->boolean('status')->default(1);
             $table->rememberToken();
             $table->timestamps();
         });
