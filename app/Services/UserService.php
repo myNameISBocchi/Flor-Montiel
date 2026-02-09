@@ -65,6 +65,18 @@ class UserService{
         return $result;
 
     }
+
+    public function update(string $id, array $user){
+
+    }
+
+    public function delete(string $id){
+
+    }
+
+    public function findById(string $id){
+
+    }
 }
 
 ?>
