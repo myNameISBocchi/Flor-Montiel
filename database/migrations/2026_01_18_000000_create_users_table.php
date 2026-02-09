@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('identification');
             $table->string('phone');
-            $table->string('nacionality');
+            $table->foreignId('countryId')->constrained(
+                table:'countries', indexName:'users_countries_id'
+            );
             $table->foreignId('comunitieId')->constrained(
                 table:'comunities', indexName:'users_comunities_id'
             )->nullable();

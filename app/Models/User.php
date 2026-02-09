@@ -22,7 +22,7 @@ class User extends Authenticatable
         'lastName',
         'email',
         'identification',
-        'nacionality',
+        'countryId',
         'comunitieId',
         'councilId',
         'committeeId',
