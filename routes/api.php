@@ -9,6 +9,7 @@ use App\Http\Controllers\countryController;
 use App\Http\Controllers\privilegesController;
 use App\Http\Controllers\roleController;
 use App\Http\Controllers\rolePrivilegeController;
+use App\Http\Controllers\stateController;
 use App\Http\Controllers\userController;
 use App\Models\Council;
 
@@ -53,4 +54,9 @@ Route::get('/countries',[countryController::class, 'findAll']);
 Route::put('countries/{id}',[countryController::class, 'update']);
 Route::delete('/countries/{id}',[countryController::class, 'delete']);
 Route::get('/countries/{country}',[countryController::class, 'findById']);
+
+Route::post('/states',[stateController::class, 'store']);
+Route::get('/states', [stateController::class, 'findAll']);
+Route::put('/states/{id}', [stateController::class, 'update']);
+Route::delete('/states/{id}',[stateController::class, 'delete']);
 

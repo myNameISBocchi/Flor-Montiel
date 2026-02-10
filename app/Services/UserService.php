@@ -1,9 +1,11 @@
 <?php
 namespace App\Services;
 use App\Models\User;
+use App\Models\UserRole;
 use Illuminate\Support\Facades\Crypt;
 class UserService{
     public function store(array $user){
+        $arrRoles = json_decode($user['roleId']);
         $duplicate = User::select('id')->where([
             ['identification',$user['identification']],
             ['phone',$user['phone']],
@@ -16,8 +18,19 @@ class UserService{
             $user['councilId'] = Crypt::decrypt($user['councilId']);
             $user['committeeId'] = Crypt::decrypt($user['committeeId']);
             $user['countryId'] = Crypt::decrypt($user['countryId']);
-            $user['roleId'] = Crypt::decrypt($user['roleId']);
-            return User::create($user);
+            $user =  User::create($user);
+
+            UserRole::where('userId',$user->id)->delete();
+            $insert = [];
+            for($i = 0; $i < count($arrRoles); $i++){
+                $idRoleDecrypted = Crypt::decrypt($arrRoles[$i]);
+                $insert[] =[
+                'userId' => $user->id,
+                'roleId' => $idRoleDecrypted
+                ];
+            }
+            UserRole::insert($insert);
+            return true;
         }
     }
 
@@ -32,8 +45,6 @@ class UserService{
         'comunitieId as comunityId',
         'councilId as consejoId',
         'committeeId as comiteId',
-        'roleId',
-        'roles.roleName',
         'comunities.comunityName',
         'councils.councilName',
         'committees.committeeName',
@@ -46,8 +57,6 @@ class UserService{
             'councils', 'users.councilId', '=', 'councils.id'
         )->join(
             'committees', 'users.committeeId','=', 'committees.id'
-        )->join(
-            'roles', 'users.roleId', '=', 'roles.id'
         )->join(
             'countries', 'users.countryId', '=', 'countries.id'
         )->join(
