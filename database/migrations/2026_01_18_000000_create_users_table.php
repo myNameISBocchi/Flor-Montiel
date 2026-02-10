@@ -32,7 +32,6 @@ return new class extends Migration
             )->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
             $table->string('photoUser')->nullable();
             $table->boolean('status')->default(1);
             $table->rememberToken();
