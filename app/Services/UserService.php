@@ -15,6 +15,7 @@ class UserService{
             $user['comunitieId'] = Crypt::decrypt($user['comunitieId']);
             $user['councilId'] = Crypt::decrypt($user['councilId']);
             $user['committeeId'] = Crypt::decrypt($user['committeeId']);
+            $user['countryId'] = Crypt::decrypt($user['countryId']);
             $user['roleId'] = Crypt::decrypt($user['roleId']);
             return User::create($user);
         }
@@ -27,6 +28,7 @@ class UserService{
         'email',
         'identification',
         'phone',
+        'countryId',
         'comunitieId as comunityId',
         'councilId as consejoId',
         'committeeId as comiteId',
@@ -35,6 +37,9 @@ class UserService{
         'comunities.comunityName',
         'councils.councilName',
         'committees.committeeName',
+        'cities.cityName as city',
+        'countries.countryName as country',
+        'states.stateName as state',
         'status'
         )->join('comunities', 'users.comunitieId', '=', 'comunities.id'
         )->join(
@@ -43,12 +48,23 @@ class UserService{
             'committees', 'users.committeeId','=', 'committees.id'
         )->join(
             'roles', 'users.roleId', '=', 'roles.id'
+        )->join(
+            'countries', 'users.countryId', '=', 'countries.id'
+        )->join(
+            'states', 'cities.stateId', '=', 'states.id'
+        )->join(
+            'countries', 'cities.countryId', '=', 'countries.id'
         )->get()->map(function($item){
             $userIdEncrypt = Crypt::encrypt($item->userId);
             $roleIdEncrypt = Crypt::encrypt($item->roleId);
             $comunityIdEncrypt = Crypt::encrypt($item->comunityId);
             $consejoIdEncrpt = Crypt::encrypt($item->consejoId);
             $comiteIdEncrypt = Crypt::encrypt($item->comiteId);
+            $item->locality = [
+                'city' => $item->city,
+                'country' => $item->country,
+                'state' => $item->state
+            ];
             unset($item->roleId);
             unset($item->userId);
             unset($item->comunityId);

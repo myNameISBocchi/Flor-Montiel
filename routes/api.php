@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ComunityController;
 use App\Http\Controllers\CouncilController;
+use App\Http\Controllers\countryController;
 use App\Http\Controllers\privilegesController;
 use App\Http\Controllers\roleController;
 use App\Http\Controllers\rolePrivilegeController;
@@ -46,4 +47,10 @@ Route::post('/rolesPrivileges', [rolePrivilegeController::class, 'store']);
 
 Route::post('/users', [userController::class, 'store']);
 Route::get('/users', [userController::class, 'findAll']);
+
+Route::post('/countries',[countryController::class, 'store']);
+Route::get('/countries',[countryController::class, 'findAll']);
+Route::put('countries/{id}',[countryController::class, 'update']);
+Route::delete('/countries/{id}',[countryController::class, 'delete']);
+Route::get('/countries/{country}',[countryController::class, 'findById']);
 
