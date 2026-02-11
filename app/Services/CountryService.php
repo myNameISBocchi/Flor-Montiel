@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 use App\Models\Country;
+use App\Models\State;
 use Illuminate\Support\Facades\Crypt;
 class CountryService{
     public function store(array $country){
@@ -14,9 +15,17 @@ class CountryService{
     
     public function findAll(){
         $findAll = Country::select('id', 'countryName')->get()->map(function($item){
+            $used = State::where('countryId', '=', $item->id)->first();
             $idEncrypted = Crypt::encrypt($item->id);
             $item->countryId = $idEncrypted;
+            if($used){
+                $item->blocked = 1;
+            }else{
+                $item->blocked = 0;
+            }
             unset($item->id);
+            
+            
             return $item;
         });
         return $findAll;

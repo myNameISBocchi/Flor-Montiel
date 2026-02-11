@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 use App\Models\Role;
+use App\Models\RolePrivilege;
 use Illuminate\Support\Facades\Crypt;
 
 class RoleService{
@@ -16,6 +17,12 @@ class RoleService{
     public function findAll(){
         $findAll = Role::select('id', 'roleName')->get()->map(function($roleObject){
             $idEncrypt = Crypt::encrypt($roleObject->id);
+            $used = RolePrivilege::where('roleId', '=', $roleObject->id)->first();
+            if($used){
+                $roleObject->blocked = 1;
+            }else{
+                $roleObject->blocked = 0;
+            }
             $roleObject->roleId = $idEncrypt;
             unset($roleObject->id);
             return $roleObject;
