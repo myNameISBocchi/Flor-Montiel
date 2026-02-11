@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 use App\Models\Privilege;
+use App\Models\RolePrivilege;
 use Illuminate\Support\Facades\Crypt;
 
 class PrivilegeService{
@@ -16,6 +17,12 @@ class PrivilegeService{
     public function findAll(){
         $findAll = Privilege::select('id', 'privilegeName')->get(
         )->map(function($privilegeObject){
+            $used = RolePrivilege::where('privilegeId', '=', $privilegeObject->id)->first();
+            if($used){
+                $privilegeObject->blocked = 1;
+            }else{
+                $privilegeObject->blocked = 0;
+            }
             $idDecrypted = Crypt::encrypt($privilegeObject->id);
             $privilegeObject->privilegeId = $idDecrypted;
             unset($privilegeObject->id);
