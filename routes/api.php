@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\citieController;
 use App\Http\Controllers\CommitteeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -59,4 +60,9 @@ Route::post('/states',[stateController::class, 'store']);
 Route::get('/states', [stateController::class, 'findAll']);
 Route::put('/states/{id}', [stateController::class, 'update']);
 Route::delete('/states/{id}',[stateController::class, 'delete']);
+
+Route::post('/cities',[citieController::class, 'store']);
+Route::get('/cities',[citieController::class, 'findALl']);
+Route::put('/cities/{id}',[citieController::class, 'update']);
+Route::delete('/cities/{id}',[citieController::class, 'delete']);
 
