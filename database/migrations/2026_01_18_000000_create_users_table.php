@@ -21,15 +21,9 @@ return new class extends Migration
             $table->foreignId('countryId')->constrained(
                 table:'countries', indexName:'users_countries_id'
             );
-            $table->foreignId('comunitieId')->constrained(
-                table:'comunities', indexName:'users_comunities_id'
-            )->nullable();
-            $table->foreignId('councilId')->constrained(
-                table:'councils', indexName:'users_councils_id'
-            )->nullable();
             $table->foreignId('committeeId')->constrained(
-                table:'committees', indexName:'users_committees_id'
-            )->nullable();
+                table:'council_committees', indexName:'users_councilCommittee_id'
+            );
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('photoUser')->nullable();

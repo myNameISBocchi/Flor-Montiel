@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('committees', function (Blueprint $table) {
+        Schema::create('units', function (Blueprint $table) {
             $table->id();
-            $table->string('committeeName');
-            $table->string('googleMaps');
-            $table->string('photoCommittee')->nullable();
+            $table->string('unitName');
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('committees');
+        Schema::dropIfExists('units');
     }
 };

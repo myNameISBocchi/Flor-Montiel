@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('councils_committees', function (Blueprint $table) {
+        Schema::create('council_committees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('councilId')->constrained(
                 table:'councils', indexName:'council_id'
             );
-            $table->foreignId('committeeId')->constrained(
-                table:'committees', indexName:'committee_id'
+            $table->foreignId('unitId')->constrained(
+                table:'units', indexName:'unit_id'
             );
+            $table->string('committeeName');
             $table->timestamps();
         });
     }

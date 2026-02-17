@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('councils', function (Blueprint $table) {
             $table->id();
-            $table->string('councilName');
+            $table->foreignId('comunityId')->constrained(
+                table:'comunities', indexName: 'councils_comunity_id'
+            );
+              $table->string('councilName');
             $table->string('googleMaps');
             $table->string('photoCouncil')->nullable();
             $table->timestamps();
