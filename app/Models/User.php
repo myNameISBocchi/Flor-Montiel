@@ -23,8 +23,6 @@ class User extends Authenticatable
         'email',
         'identification',
         'countryId',
-        'comunitieId',
-        'councilId',
         'committeeId',
         'phone',
         'password',

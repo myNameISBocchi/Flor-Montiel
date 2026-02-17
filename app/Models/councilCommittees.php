@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class councilCommittees extends Model
 {
-    //
+    protected $fillable = [
+        'councilId',
+        'unitId',
+        'committeeName'
+    ];
 }
