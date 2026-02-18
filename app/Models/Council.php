@@ -8,6 +8,7 @@ class Council extends Model
 {
     protected $fillable = [
         'councilName',
+        'comunityId',
         'googleMaps',
         'photoCouncil'
     ];
