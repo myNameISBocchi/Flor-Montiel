@@ -19,6 +19,12 @@ class CouncilSeeder extends Seeder
                 'comunityId' => 1,
                 'googleMaps' => 'http/direccion/inventada/del/estado/zulia/Maracaibo',
                 'photoCouncil' => 'No hay'
+            ],
+            [
+                'councilName' => 'ARBOLES',
+                'comunityId' => 2,
+                'googleMaps' => 'https/jardin/botanico',
+                'photoCouncil' => 'No hay'
             ]
         ];  
         Council::insert($arrCouncil);

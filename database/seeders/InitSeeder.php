@@ -18,7 +18,9 @@ class InitSeeder extends Seeder
             RoleSeeder::class,
             ComunitieSeeder::class,
             RolePrivilegeSeeder::class,
-            CouncilSeeder::class
+            CouncilSeeder::class,
+            UnitSeeder::class,
+            CommitteeSeeder::class
             ]
         );
     }
