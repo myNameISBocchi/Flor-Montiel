@@ -57,29 +57,24 @@ class ComunityService{
 
     }
     
-     public function uploadPhoto(int $id, $file) {
+     public function uploadPhoto(int $id, $file) 
+{
     $comunity = Comunity::find($id);
     
     if (!$comunity) {
         return false;
     }
-
-  
-    if ($comunity->photoComunity && $comunity->photoComunity !== 'MONTE') {
+    if (!empty($comunity->photoComunity)) {
         $oldPath = str_replace('storage/', '', $comunity->photoComunity);
+        
         if (Storage::disk('public')->exists($oldPath)) {
             Storage::disk('public')->delete($oldPath);
         }
     }
-
-    
     $extension = $file->getClientOriginalExtension();
-    $fileName = $id . '_' . time() . '.' . $extension;
+    $fileName = 'comunity_' . $id . '_' . time() . '.' . $extension;
 
-    
     $path = $file->storeAs('comunities', $fileName, 'public');
-
-    
     $comunity->photoComunity = 'storage/' . $path;
     $comunity->save();
     

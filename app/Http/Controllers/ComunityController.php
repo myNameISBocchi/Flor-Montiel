@@ -110,7 +110,6 @@ class ComunityController extends Controller
 
     }
 
-    // ESTA ES LA FUNCIÓN CORREGIDA
     public function uploadPhoto(Request $req, $id){
         try{
 
@@ -137,7 +136,7 @@ class ComunityController extends Controller
             return response()->json(['error' => 1, 'msg' => 'no se pudo guardar']);
 
         }catch(\Exception $e){
-            // Mantenemos tu estructura de error original
+            
             return response()->json(['error' => 500, 'msg' => $e->getMessage()], 500);
         }
     }
