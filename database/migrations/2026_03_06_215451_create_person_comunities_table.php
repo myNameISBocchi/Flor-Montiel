@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('peoples_comunities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('peopleId')->constrained(
-                table:'peoples',indexName:'people_comunities_id'
+            $table->foreignId('personId')->constrained(
+                table:'peoples', indexName:'peoples_comunities_id'
             );
             $table->foreignId('comunityId')->constrained(
-                table:'comunities', indexName:'comunity_id'
+                table:'comunities', indexName:'comunities_peoples_id'
             );
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('peoples_comunities');
+        Schema::dropIfExists('person_comunities');
     }
 };

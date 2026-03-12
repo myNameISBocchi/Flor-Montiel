@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserRole extends Model
+class PersonRole extends Model
 {
-    protected $table = 'users_roles';
+    protected $table = ['peoples_roles'];
     protected $fillable = [
-        'userId',
+        'personId',
         'roleId'
     ];
 }

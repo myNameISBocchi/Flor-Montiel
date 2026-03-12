@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class people_committee extends Model
+class PersonCommittees extends Model
 {
-    protected $table = 'peoples_committee';
+    protected $table = ['peoples_committees'];
     protected $fillable = [
-        'peopleId',
+        'personId',
         'committeeId'
     ];
 }

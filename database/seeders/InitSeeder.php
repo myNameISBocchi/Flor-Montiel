@@ -22,6 +22,7 @@ class InitSeeder extends Seeder
             ComunitieSeeder::class,
             RolePrivilegeSeeder::class,
             CouncilSeeder::class,
+            CommitteSeeder::class
             ]
         );
     }
