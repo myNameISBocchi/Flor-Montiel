@@ -31,6 +31,42 @@ class PersonService{
 
     }
     public function findAll(){
+        $all = Person::select(
+            'person.id as personId',
+            'firstName',
+            'lastName',
+            'identification',
+            'phone',
+            'status',
+            'date',
+            'cityName as city',
+            'person.cityId as cityId',
+            'countries.countryName as country',
+            'states.stateName as state',
+            'photoPerson'
+        )->join('cities', 'person.cityId', '=', 'cities.id'
+        )->join('states', 'person.stateId', '=', 'states.id'
+        )->join('countries','person.countryId','=','countries.id')->get()->map(function($item){
+            $blockedResult = PersonRole::select('id')->where('personId', '=', $item->personId)->first();
+            if($blockedResult){
+                $item->blocked = 1;
+            }else{
+                $item->blocked = 0;
+            }
+            $item->locality = [
+                'city' => $item->city,
+                'country' => $item->country,
+                'state' => $item->state
+            ];
+            $personIdEncrypt = Crypt::encrypt($item->personId);
+            $cityIdEncrypt = Crypt::encrypt($item->cityId);
+            unset($item->personId);
+            unset($item->cityId);
+            $item->personId = $personIdEncrypt;
+            $item->cityId = $cityIdEncrypt;
+            return $item;
+        });
+        return $all;
 
     }
 }
