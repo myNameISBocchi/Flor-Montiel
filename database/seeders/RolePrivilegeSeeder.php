@@ -54,9 +54,12 @@ class RolePrivilegeSeeder extends Seeder
             $role = Role::where('roleName',$rolePrivilege['roleName'])->first();
             foreach($rolePrivilege['privileges'] as $privilegeData){
                 $privilege = Privilege::where('route', '=', $privilegeData)->first();
+                $now = now();
                 $arrInsert[]=[
                     'roleId' => $role->id,
-                    'privilegeId' => $privilege->id
+                    'privilegeId' => $privilege->id,
+                    'created_at' => $now,
+                    'updated_at' => $now
 
                 ]; 
             }
