@@ -2,7 +2,7 @@
 namespace App\Services;
 use App\Models\Role;
 use App\Models\RolePrivilege;
-use App\Models\UserRole;
+use App\Models\PersonRole;
 use Illuminate\Support\Facades\Crypt;
 
 class RoleService{
@@ -19,7 +19,7 @@ class RoleService{
         $findAll = Role::select('id', 'roleName')->get()->map(function($roleObject){
             $idEncrypt = Crypt::encrypt($roleObject->id);
             $useRolePrivilege = RolePrivilege::where('roleId', '=', $roleObject->id)->first();
-            $useUserRole = UserRole::where('roleId', '=', $roleObject->id)->first();
+            $useUserRole = PersonRole::where('roleId', '=', $roleObject->id)->first();
             if($useUserRole){
                 $roleObject->blocked = 1;
             }else{
