@@ -18,18 +18,14 @@ class RoleService{
     public function findAll(){
         $findAll = Role::select('id', 'roleName')->get()->map(function($roleObject){
             $idEncrypt = Crypt::encrypt($roleObject->id);
-            $useRolePrivilege = RolePrivilege::where('roleId', '=', $roleObject->id)->first();
-            $useUserRole = PersonRole::where('roleId', '=', $roleObject->id)->first();
-            if($useUserRole){
+            $RolePrivilege = RolePrivilege::where('roleId', '=', $roleObject->id)->first();
+            $personRole = PersonRole::where('roleId', '=', $roleObject->id)->first();
+            if($personRole || $RolePrivilege){
                 $roleObject->blocked = 1;
             }else{
                 $roleObject->blocked = 0;
             }
-            if($useRolePrivilege){
-                $roleObject->blocked = 1;
-            }else{
-                $roleObject->blocked = 0;
-            }
+            
             $roleObject->roleId = $idEncrypt;
             unset($roleObject->id);
             return $roleObject;
