@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Crypt;
 
 class CommitteeService{
     public function store(array $committee){
-        $duplicate = Committee::select('id')->where([
-            ['committeeName', '=', $committee['committeeName']],
-            ['googleMaps', '=', $committee['googleMaps']]
-        ])->first();
+        $duplicate = Committee::select('id')->where(
+            'committeeName', '=', $committee['committeeName'],
+            
+        )->first();
         if($duplicate){
             return false;
         }else{
@@ -18,7 +18,7 @@ class CommitteeService{
     }
 
     public function findAll(){
-        $findAll = Committee::select('id', 'committeeName', 'googleMaps', 'photoCommittee'
+        $findAll = Committee::select('id', 'committeeName'
         )->get()->map(function($committeeTemp){
         $idEncrypt = Crypt::encrypt($committeeTemp->id);
         $committeeTemp->committeeId = $idEncrypt;
@@ -33,7 +33,6 @@ class CommitteeService{
         $duplicado = Committee::where([
             ['id', '!=', $idDecrypted],
             ['committeeName', '=', $committee['committeeName']],
-            ['googleMaps', '=', $committee['googleMaps']]
         ])->first();
         if($duplicado){
             return false;

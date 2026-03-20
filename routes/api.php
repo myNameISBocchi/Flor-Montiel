@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ComunityController;
 use App\Http\Controllers\CouncilController;
 use App\Http\Controllers\countryController;
+use App\Http\Controllers\personController;
 use App\Http\Controllers\privilegesController;
 use App\Http\Controllers\roleController;
 use App\Http\Controllers\rolePrivilegeController;
@@ -31,9 +32,10 @@ Route::delete('/councils/{id}',[CouncilController::class, 'delete']);
 
 Route::post('/committes',[CommitteeController::class, 'store']);
 Route::get('/committes',[CommitteeController::class, 'findAll']);
+/*
 Route::put('/committes/{id}',[CommitteeController::class, 'update']);
 Route::delete('/committes/{id}',[CommitteeController::class, 'delete']);
-
+*/
 Route::post('/roles',[roleController::class, 'store']);
 Route::get('/roles', [roleController::class, 'findAll']);
 Route::put('/roles/{id}',[roleController::class, 'update']);
@@ -47,8 +49,8 @@ Route::delete('privileges/{id}', [privilegesController::class, 'delete']);
 Route::get('rolesPrivileges/{roleId}', [rolePrivilegeController::class, 'findPrivilegeByRoleId']);
 Route::post('/rolesPrivileges', [rolePrivilegeController::class, 'store']);
 
-Route::post('/users', [userController::class, 'store']);
-Route::get('/users', [userController::class, 'findAll']);
+Route::post('/peoples', [personController::class, 'store']);
+//Route::get('/users', [userController::class, 'findAll']);
 
 Route::post('/countries',[countryController::class, 'store']);
 Route::get('/countries',[countryController::class, 'findAll']);

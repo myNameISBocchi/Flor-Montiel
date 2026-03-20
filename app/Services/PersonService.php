@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 use App\Models\Person;
+use App\Models\PersonCommittees;
 use App\Models\PersonComunity;
 use App\Models\PersonCouncil;
 use App\Models\PersonRole;
@@ -9,9 +10,6 @@ use Illuminate\Support\Facades\Crypt;
 class PersonService{
     public function store(array $person){
         $arrRoles = json_decode($person['roleId']);
-        $arrCommittee = json_decode($person['committeeId']);
-         $arrComunities = json_decode($person['comunityId']);
-         $arrCouncils = json_decode($person['councilId']);
          
         $duplicate = Person::select('id')->where([['identification',$person['identification']],['email',$person['email']],['phone',$person['phone']],])->first();
         if($duplicate){
@@ -36,36 +34,27 @@ class PersonService{
             if(!empty($rolesInsert)){
                 PersonRole::insert($rolesInsert);
             }
-            
-            PersonComunity::where('personId', '=', $person->id)->delete();
-            $insertComunities = [];
-            for($i = 0; $i < count($arrComunities); $i++){
-                $ComunityDecrypted = Crypt::decrypt($arrComunities[$i]);
-                $insertComunities[] = [
+            if(!empty($person['comunityId'])){
+                PersonComunity::create([
                     'personId' => $person->id,
-                    'comunityId' => $ComunityDecrypted,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ];
-            }
-            if(!empty($insertComunities)){
-                PersonComunity::insert($insertComunities);
-            }
-            PersonCouncil::where('personId', '=', $person->id)->delete();
-            $insertCouncils = [];
-            for($i = 0;  $i < count($arrCouncils); $i++){
-                $councilDecrypted = Crypt::decrypt($arrCouncils[$i]);
-                $insertCouncils[] = [
-                    'personId' => $person->id,
-                    'councilId' => $councilDecrypted,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ];
-            }
-            if(!empty($insertCouncils)){
-                PersonCouncil::insert($insertCouncils);
+                    'comunityId' => Crypt::decrypt($person['comunityId'])
+                ]);
             }
 
+            if(!empty($person['councilId'])){
+                PersonCouncil::create([
+                    'personId' => $person->id,
+                    'councilId' => Crypt::decrypt($person['councilId'])
+                ]);
+            }
+            if(!empty($person['committeeId'])){
+                PersonCommittees::create(
+                    [
+                        'personId' => $person->id,
+                        'committeeId' => Crypt::decrypt($person['committeeId'])
+                    ]
+                );
+            }
             
             return true;
         }

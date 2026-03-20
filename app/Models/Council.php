@@ -9,6 +9,7 @@ class Council extends Model
     protected $fillable = [
         'councilName',
         'comunityId',
+        'cityId',
         'googleMaps',
     ];
 }

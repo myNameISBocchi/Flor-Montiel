@@ -10,7 +10,8 @@ class CouncilService{
             if($findCounilName){
                 return false;
             }else{
-                $council['comunityId'] = $council['comunityId'];
+                $council['comunityId'] = Crypt::decrypt($council['comunityId']);
+                $council['cityId'] = Crypt::decrypt($council['cityId']);
                 return Council::create($council);
             }
     }
@@ -19,8 +20,7 @@ class CouncilService{
         'councilName',
         'comunityName',
         'comunityId', 
-        'councils.googleMaps', 
-        'photoCouncil',
+        'councils.googleMaps',
         'comunities.id as comunityId'
         )->join('comunities', 'councils.comunityId', '=', 'comunities.id')->get()->map(function($councilTemp){
             $idEncrypt = Crypt::encrypt($councilTemp->id);
