@@ -79,10 +79,26 @@ class PersonService{
             'peoples.cityId as cityId',
             'countries.countryName as country',
             'states.stateName as state',
-            'photoPerson'
+            'photoPerson',
+            'comunities.comunityName',
+            'councils.councilName',
+            'committees.committeeName'
         )->join('cities', 'peoples.cityId', '=', 'cities.id'
         )->join('states', 'cities.stateId', '=', 'states.id'
-        )->join('countries','states.countryId','=','countries.id')->get()->map(function($item){
+        )->join('countries','states.countryId','=','countries.id'
+        )->join(
+            'peoples_comunities', 'peoples.id', '=', 'peoples_comunities.personId'
+        )->join(
+            'comunities', 'peoples_comunities.comunityId', '=', 'comunities.id'
+        )->join(
+            'peoples_councils', 'peoples.id', '=', 'peoples_councils.personId'
+        )->join(
+            'councils', 'peoples_councils.councilId', '=', 'councils.id'
+        )->join(
+            'peoples_committees', 'peoples.id', '=', 'peoples_committees.personId'
+        )->join(
+            'committees', 'peoples_committees.committeeId', '=', 'committees.id'
+        )->get()->map(function($item){
             $blockedResult = PersonRole::select('id')->where('personId', '=', $item->personId)->first();
             if($blockedResult){
                 $item->blocked = 1;
