@@ -28,6 +28,7 @@ class personController extends Controller
                 return response()->json($res,500);
             }
         }catch(\Exception $e){
+            dd($e);
             return response()->json(['error' => 500, Message::errorServer()]);
         }
     }

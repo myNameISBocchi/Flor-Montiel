@@ -10,22 +10,28 @@ use Illuminate\Support\Facades\Crypt;
 class PersonService{
     public function store(array $person){
         $arrRoles = json_decode($person['roleId']);
+        $idComunity = $person['comunityId'];
+        $idCouncil = $person['councilId'];
+        $idCommitte = $person['committeeId'];
          
-        $duplicate = Person::select('id')->where([['identification',$person['identification']],['email',$person['email']],['phone',$person['phone']],])->first();
+        $duplicate = Person::select('id')->where([
+            ['identification',$person['identification']],
+            ['email',$person['email']],
+            ['phone',$person['phone']]])->first();
         if($duplicate){
             return false;
         }else{
             $countryDecrypted = Crypt::decrypt($person['cityId']);
             $person['cityId'] = $countryDecrypted;
-            $person = Person::create($person);
+            $newPerson = Person::create($person);
             
-            PersonRole::where('personId', $person->id)->delete();
+            PersonRole::where('personId', $newPerson->id)->delete();
             $rolesInsert = [];
 
             for($i = 0; $i < count($arrRoles); $i++){
                 $roleIdDecrypted = Crypt::decrypt($arrRoles[$i]);
                 $rolesInsert[] =[
-                    'personId' => $person->id,
+                    'personId' => $newPerson->id,
                     'roleId' => $roleIdDecrypted,
                     'created_at' => now(),
                     'updated_at' => now()
@@ -34,24 +40,24 @@ class PersonService{
             if(!empty($rolesInsert)){
                 PersonRole::insert($rolesInsert);
             }
-            if(!empty($person['comunityId'])){
+            if(!empty($idComunity)){
                 PersonComunity::create([
-                    'personId' => $person->id,
-                    'comunityId' => Crypt::decrypt($person['comunityId'])
+                    'personId' => $newPerson->id,
+                    'comunityId' => Crypt::decrypt($idComunity)
                 ]);
             }
 
-            if(!empty($person['councilId'])){
+            if(!empty($idCouncil)){
                 PersonCouncil::create([
-                    'personId' => $person->id,
-                    'councilId' => Crypt::decrypt($person['councilId'])
+                    'personId' => $newPerson->id,
+                    'councilId' => Crypt::decrypt($idCouncil)
                 ]);
             }
-            if(!empty($person['committeeId'])){
+            if(!empty($idCommitte)){
                 PersonCommittees::create(
                     [
-                        'personId' => $person->id,
-                        'committeeId' => Crypt::decrypt($person['committeeId'])
+                        'personId' => $newPerson->id,
+                        'committeeId' => Crypt::decrypt($idCommitte)
                     ]
                 );
             }
