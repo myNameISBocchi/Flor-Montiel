@@ -82,7 +82,8 @@ class PersonService{
             'photoPerson',
             'comunities.comunityName',
             'councils.councilName',
-            'committees.committeeName'
+            'committees.committeeName',
+            'roles.roleName'
         )->join('cities', 'peoples.cityId', '=', 'cities.id'
         )->join('states', 'cities.stateId', '=', 'states.id'
         )->join('countries','states.countryId','=','countries.id'
@@ -98,6 +99,10 @@ class PersonService{
             'peoples_committees', 'peoples.id', '=', 'peoples_committees.personId'
         )->join(
             'committees', 'peoples_committees.committeeId', '=', 'committees.id'
+        )->join(
+            'peoples_roles', 'peoples.id', '=', 'peoples_roles.personId'
+        )->join(
+            'roles', 'peoples_roles.roleId', 'roles.id'
         )->get()->map(function($item){
             $blockedResult = PersonRole::select('id')->where('personId', '=', $item->personId)->first();
             if($blockedResult){
