@@ -51,7 +51,6 @@ class personController extends Controller
 
         }
     }
-
     public function findById(string $id){
         try{
             $error = 0;
@@ -96,6 +95,26 @@ class personController extends Controller
             dd($e);
                 return response()->json(['error' => 500, 'msg' => Message::errorServer()]);
         }
-
+    }
+    public function delete(string $id){
+        try{
+            $delete = $this->personService->delete($id);
+            if($delete){
+                $res = [
+                    'error' => 0,
+                    'msg' => Message::delete()
+                ];
+                return response()->json($res,200);
+            }else{
+                $res = [
+                    'error' => 1,
+                    'msg' => Message::errorServer()
+                ];
+                return response()->json($res,500);
+            }
+        }catch(\Exception $e){
+            dd($e);
+            return response()->json(['error' => 500, 'msg' => Message::errorServer()]);
+        }
     }
 }

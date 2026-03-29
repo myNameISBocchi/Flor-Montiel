@@ -170,7 +170,11 @@ class PersonService{
             }else{
                 return false;
             }
-
+    }
+    public function delete(string $id){
+        $idDecrypted = Crypt::decrypt($id);
+       Person::where('id', '=', $idDecrypted)->delete();
+        return true;
     }
 }
 

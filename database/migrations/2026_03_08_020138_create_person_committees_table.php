@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('personId')->constrained(
                 table:'peoples', indexName:'peoples_committees_id'
-            );
+            )->onDelete('cascade');
             $table->foreignId('committeeId')->constrained(
                 table:'committees', indexName:'committees_peoples_id'
             );

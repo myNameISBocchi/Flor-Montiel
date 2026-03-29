@@ -12,8 +12,6 @@ use App\Http\Controllers\privilegesController;
 use App\Http\Controllers\roleController;
 use App\Http\Controllers\rolePrivilegeController;
 use App\Http\Controllers\stateController;
-use App\Http\Controllers\userController;
-use App\Models\Council;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -53,6 +51,7 @@ Route::post('/peoples', [personController::class, 'store']);
 Route::get('/peoples', [personController::class, 'findAll']);
 Route::get('/peoples/{id}',[personController::class, 'findById']);
 Route::put('/peoples/{id}',[personController::class, 'update']);
+Route::delete('/peoples/{id}',[personController::class, 'delete']);
 
 Route::post('/countries',[countryController::class, 'store']);
 Route::get('/countries',[countryController::class, 'findAll']);
