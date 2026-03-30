@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\citieController;
 use App\Http\Controllers\CommitteeController;
 use Illuminate\Http\Request;
@@ -16,6 +17,8 @@ use App\Http\Controllers\stateController;
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
+Route::post('/loggin', [AuthController::class, 'loggin']);
 
 Route::post('/comunities', [ComunityController::class, 'store']);
 Route::get('/comunities', [ComunityController::class, 'findAll']);
