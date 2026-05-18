@@ -14,13 +14,14 @@ class InitSeeder extends Seeder
     {
         $this->call(
             [
-            PrivilegeSeeder::class,
             RoleSeeder::class,
+            DynamicPrivilegesSeeder::class,
             LocationSeeder::class,
             ComunitieSeeder::class,
             RolePrivilegeSeeder::class,
             CouncilSeeder::class,
             CommitteeSeeder::class,
+            AddEssentialPrivilegesToRolesSeeder::class,
             PersonSeeder::class,
             
             ]

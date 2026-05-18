@@ -2,16 +2,45 @@
 namespace App\Services;
 use App\Models\Role;
 use App\Models\RolePrivilege;
+use App\Models\Privilege;
 use App\Models\PersonRole;
 use Illuminate\Support\Facades\Crypt;
 
 class RoleService{
+    
+    private function getEssentialPrivileges()
+    {
+        $essentialRoutes = [
+            'auth.login',
+            'peoples.show',
+        ];
+        
+        return Privilege::whereIn('route', $essentialRoutes)->pluck('id')->toArray();
+    }
+    
     public function store(array $role){
         $duplicado = Role::select('id')->where('roleName', '=', $role['roleName'])->first();
         if($duplicado){
             return false;
-        }else{
-            return Role::create($role);
+        } else {
+            $newRole = Role::create($role);
+            
+            $essentialPrivileges = $this->getEssentialPrivileges();
+            
+            foreach ($essentialPrivileges as $privilegeId) {
+                $exists = RolePrivilege::where('roleId', $newRole->id)
+                    ->where('privilegeId', $privilegeId)
+                    ->exists();
+                    
+                if (!$exists) {
+                    RolePrivilege::create([
+                        'roleId' => $newRole->id,
+                        'privilegeId' => $privilegeId
+                    ]);
+                }
+            }
+            
+            return $newRole;
         }
     }
 
@@ -22,7 +51,7 @@ class RoleService{
             $personRole = PersonRole::where('roleId', '=', $roleObject->id)->first();
             if($personRole || $RolePrivilege){
                 $roleObject->blocked = 1;
-            }else{
+            } else {
                 $roleObject->blocked = 0;
             }
             
@@ -41,8 +70,8 @@ class RoleService{
         ])->first();
         if($repet){
             return false;
-        }else{
-            return Role::where('id', '=',$idDecrypted)->update($role);
+        } else {
+            return Role::where('id', '=', $idDecrypted)->update($role);
         }
     }
 
@@ -51,6 +80,4 @@ class RoleService{
         Role::where('id', '=', $idDecrypted)->delete();
         return true;
     }
-
 }
-?>

@@ -2,10 +2,13 @@
 namespace App\Services;
 use App\Models\RolePrivilege;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class RolePrivilegeService{
+    
     public function findPrivilegeByRoleId(string $roleId){
         $roleIdDecrypted = Crypt::decrypt($roleId);
+        
         $results = RolePrivilege::select(
             'roles_privileges.id as rolePrivilegeId',
             'roles.id as roleId',
@@ -27,26 +30,27 @@ class RolePrivilegeService{
             $rolePrivilegeTemp->rolePrivilegeId = $rolePrivilegeId;
             return $rolePrivilegeTemp;
         })->toArray();
+        
         return $results;
     }
-    public function store(array $rolePrivilege){
-        $decrypteRoleId = Crypt::decrypt($rolePrivilege['roleId']);
+    
+    public function store(array $rolePrivilege)
+    {
+        $decryptedRoleId = Crypt::decrypt($rolePrivilege['roleId']);
         $arrPrivilegesId = json_decode($rolePrivilege['privilegeId']);
-        RolePrivilege::where('roleId', '=', $decrypteRoleId)->delete();
+        
+        RolePrivilege::where('roleId', $decryptedRoleId)->delete();
+        
         $insert = [];
         for($i = 0; $i < count($arrPrivilegesId); $i++){
             $decryptedPrivilegesId = Crypt::decrypt($arrPrivilegesId[$i]);
             $insert[] = [
-                'roleId' => $decrypteRoleId,
+                'roleId' => $decryptedRoleId,
                 'privilegeId' => $decryptedPrivilegesId
             ];
         }
+        
         RolePrivilege::insert($insert);
         return true;
     }
 }
-
-
-
-
-?>

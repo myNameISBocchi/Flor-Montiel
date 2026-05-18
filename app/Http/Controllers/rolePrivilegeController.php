@@ -9,23 +9,15 @@ class rolePrivilegeController extends Controller
 {
     public function __construct(protected RolePrivilegeService $rolePrivileges){}
     public function findPrivilegeByRoleId(string $roleId){
-        try{
-            $error = 0;
-            $msg = "Registro encontrado";
-            $results = $this->rolePrivileges->findPrivilegeByRoleId($roleId);
-            if($results){
-                $res = [
-                'error' => $error,
-                'msg' => $msg,
-                'results' => $results
-                ];
-                return response()->json($res,200);
-            }
-        }catch(\Exception $e){
-            return response()->json(['error' => 500, 'msg' => 'Error del servidor']);
-
-        }
+    try{
+        $results = $this->rolePrivileges->findPrivilegeByRoleId($roleId);
+        
+        return response()->json($results);
+        
+    } catch(\Exception $e){
+        return response()->json(['error' => 500, 'msg' => $e->getMessage()], 500);
     }
+}
     public function store(Request $req){
         try{
             $error = 0;
