@@ -97,73 +97,74 @@ class personController extends Controller
         }
     }
     
-  public function updateOwn(Request $req)
-{
-    $userId = request()->attributes->get('user_id');
-    
-    if (!$userId) {
-        return response()->json(['error' => 1, 'msg' => 'No user id'], 401);
-    }
-    
-    $data = $req->input();
-    
-    try {
-        $person = Person::find($userId);
-        if (!$person) {
-            return response()->json(['error' => 1, 'msg' => 'User not found'], 404);
-        }
-        
-        if (isset($data['firstName'])) {
-            $person->firstName = $data['firstName'];
-        }
-        if (isset($data['lastName'])) {
-            $person->lastName = $data['lastName'];
-        }
-        if (isset($data['email'])) {
-            $person->email = $data['email'];
-        }
-        if (isset($data['phone'])) {
-            $person->phone = $data['phone'];
-        }
-        if (!empty($data['password'])) {
-            $person->password = $data['password'];
-        }
-        
-        $person->save();
-        
-        return response()->json(['error' => 0, 'msg' => 'Perfil actualizado', 'data' => $person]);
-        
-    } catch (\Exception $e) {
-        return response()->json(['error' => 1, 'msg' => $e->getMessage(), 'line' => $e->getLine()], 500);
-    }
-}
-public function uploadPhotoOwn(Request $req)
-{
-    try {
-        $req->validate([
-            'photoPerson' => 'required|image|mimes:png,jpg,jpeg|max:2048',
-        ]);
-        
+    public function updateOwn(Request $req)
+    {
         $userId = request()->attributes->get('user_id');
         
         if (!$userId) {
-            return response()->json(['error' => 1, 'msg' => 'Usuario no autenticado'], 401);
+            return response()->json(['error' => 1, 'msg' => 'No user id'], 401);
         }
         
-        $file = $req->file('photoPerson');
+        $data = $req->input();
         
-        $upload = $this->personService->uploadOwnPhoto((int)$userId, $file);
-        
-        if ($upload) {
-            return response()->json(['error' => 0, 'msg' => 'Foto actualizada correctamente'], 200);
+        try {
+            $person = Person::find($userId);
+            if (!$person) {
+                return response()->json(['error' => 1, 'msg' => 'User not found'], 404);
+            }
+            
+            if (isset($data['firstName'])) {
+                $person->firstName = $data['firstName'];
+            }
+            if (isset($data['lastName'])) {
+                $person->lastName = $data['lastName'];
+            }
+            if (isset($data['email'])) {
+                $person->email = $data['email'];
+            }
+            if (isset($data['phone'])) {
+                $person->phone = $data['phone'];
+            }
+            if (!empty($data['password'])) {
+                $person->password = $data['password'];
+            }
+            
+            $person->save();
+            
+            return response()->json(['error' => 0, 'msg' => 'Perfil actualizado', 'data' => $person]);
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => 1, 'msg' => $e->getMessage(), 'line' => $e->getLine()], 500);
         }
-        
-        return response()->json(['error' => 1, 'msg' => 'Error al subir la foto'], 500);
-        
-    } catch (\Exception $e) {
-        return response()->json(['error' => 1, 'msg' => $e->getMessage(), 'line' => $e->getLine()], 500);
     }
-}
+
+    public function uploadPhotoOwn(Request $req)
+    {
+        try {
+            $req->validate([
+                'photoPerson' => 'required|image|mimes:png,jpg,jpeg|max:2048',
+            ]);
+            
+            $userId = request()->attributes->get('user_id');
+            
+            if (!$userId) {
+                return response()->json(['error' => 1, 'msg' => 'Usuario no autenticado'], 401);
+            }
+            
+            $file = $req->file('photoPerson');
+            
+            $upload = $this->personService->uploadOwnPhoto((int)$userId, $file);
+            
+            if ($upload) {
+                return response()->json(['error' => 0, 'msg' => 'Foto actualizada correctamente'], 200);
+            }
+            
+            return response()->json(['error' => 1, 'msg' => 'Error al subir la foto'], 500);
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => 1, 'msg' => $e->getMessage(), 'line' => $e->getLine()], 500);
+        }
+    }
         
     public function delete(string $id){
         try{

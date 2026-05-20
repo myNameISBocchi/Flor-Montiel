@@ -1,5 +1,6 @@
 <?php
 namespace App\Services;
+
 use App\Models\Person;
 use App\Models\PersonCommittees;
 use App\Models\PersonComunity;
@@ -276,32 +277,64 @@ class PersonService{
         });
     }
     
-    public function update(string $id, array $person) {
-        $idDecrypted = Crypt::decrypt($id);
-        
-        $duplicate = Person::where('id', '!=', $idDecrypted)
-            ->where(function($query) use ($person) {
-                $query->where('identification', $person['identification'])
-                      ->orWhere('email', $person['email'])
-                      ->orWhere('phone', $person['phone']);
-            })
-            ->exists();
+   public function update(string $id, array $person) {
+    $idDecrypted = Crypt::decrypt($id);
+    
+    $duplicate = Person::where('id', '!=', $idDecrypted)
+        ->where(function($query) use ($person) {
+            $query->where('identification', $person['identification'])
+                  ->orWhere('email', $person['email'])
+                  ->orWhere('phone', $person['phone']);
+        })
+        ->exists();
 
-        if (!$duplicate) {
-            $model = Person::find($idDecrypted);
-            if ($model) {
-                if (isset($person['cityId'])) {
-                    $person['cityId'] = Crypt::decrypt($person['cityId']);
-                }
-                if (empty($person['password'])) {
-                    unset($person['password']);
-                }
-                $model->fill($person);
-                return $model->save();
+    if (!$duplicate) {
+        $model = Person::find($idDecrypted);
+        if ($model) {
+            if (isset($person['cityId'])) {
+                $person['cityId'] = Crypt::decrypt($person['cityId']);
             }
+            if (empty($person['password'])) {
+                unset($person['password']);
+            }
+            
+            $model->fill($person);
+            $saved = $model->save();
+            if ($saved) {
+                if (isset($person['comunityId'])) {
+                    PersonComunity::where('personId', $idDecrypted)->delete();
+                    if (!empty($person['comunityId'])) {
+                        PersonComunity::create([
+                            'personId' => $idDecrypted,
+                            'comunityId' => Crypt::decrypt($person['comunityId'])
+                        ]);
+                    }
+                }
+                if (isset($person['councilId'])) {
+                    PersonCouncil::where('personId', $idDecrypted)->delete();
+                    if (!empty($person['councilId'])) {
+                        PersonCouncil::create([
+                            'personId' => $idDecrypted,
+                            'councilId' => Crypt::decrypt($person['councilId'])
+                        ]);
+                    }
+                }
+                if (isset($person['committeeId'])) {
+                    PersonCommittees::where('personId', $idDecrypted)->delete();
+                    if (!empty($person['committeeId'])) {
+                        PersonCommittees::create([
+                            'personId' => $idDecrypted,
+                            'committeeId' => Crypt::decrypt($person['committeeId'])
+                        ]);
+                    }
+                }
+            }
+            
+            return $saved;
         }
-        return false;
     }
+    return false;
+}
 
     public function updateRoles(string $id, array $roleId){
         $idDecrypted = Crypt::decrypt($id);
@@ -324,61 +357,61 @@ class PersonService{
     }
 
     public function updateOwn(int $userId, array $data)
-{
-    $person = Person::find($userId);
-    
-    if (!$person) {
-        return false;
+    {
+        $person = Person::find($userId);
+        
+        if (!$person) {
+            return false;
+        }
+        
+        if (isset($data['firstName'])) {
+            $person->firstName = $data['firstName'];
+        }
+        if (isset($data['lastName'])) {
+            $person->lastName = $data['lastName'];
+        }
+        if (isset($data['email'])) {
+            $person->email = $data['email'];
+        }
+        if (isset($data['phone'])) {
+            $person->phone = $data['phone'];
+        }
+        if (!empty($data['password'])) {
+            $person->password = $data['password'];
+        }
+        
+        $saved = $person->save();
+        
+        return $saved;
     }
-    
-    if (isset($data['firstName'])) {
-        $person->firstName = $data['firstName'];
-    }
-    if (isset($data['lastName'])) {
-        $person->lastName = $data['lastName'];
-    }
-    if (isset($data['email'])) {
-        $person->email = $data['email'];
-    }
-    if (isset($data['phone'])) {
-        $person->phone = $data['phone'];
-    }
-    if (!empty($data['password'])) {
-        $person->password = $data['password'];
-    }
-    
-    $saved = $person->save();
-    
-    return $saved;
-}
 
     public function uploadOwnPhoto(int $userId, $file)
-{
-    $person = Person::find($userId);
-    
-    if (!$person) {
-        return false;
-    }
-    
-    if (!empty($person->photoPerson)) {
-        $oldPath = str_replace('storage/', '', $person->photoPerson);
-        if (Storage::disk('public')->exists($oldPath)) {
-            Storage::disk('public')->delete($oldPath);
+    {
+        $person = Person::find($userId);
+        
+        if (!$person) {
+            return false;
         }
+        
+        if (!empty($person->photoPerson)) {
+            $oldPath = str_replace('storage/', '', $person->photoPerson);
+            if (Storage::disk('public')->exists($oldPath)) {
+                Storage::disk('public')->delete($oldPath);
+            }
+        }
+        
+        $extension = $file->getClientOriginalExtension();
+        $fileName = 'person_' . $userId . '_' . time() . '.' . $extension;
+        $path = $file->storeAs('persons', $fileName, 'public');
+        $person->photoPerson = 'storage/' . $path;
+        $person->save();
+        
+        return $person;
     }
-    
-    $extension = $file->getClientOriginalExtension();
-    $fileName = 'person_' . $userId . '_' . time() . '.' . $extension;
-    $path = $file->storeAs('persons', $fileName, 'public');
-    $person->photoPerson = 'storage/' . $path;
-    $person->save();
-    
-    return $person;
-}
 
-public function getVocerosByConsejo(array $filters = [])
-{
-    $personas = $this->searchPerson($filters);
-    return $personas->groupBy('committeeName');
-}
+    public function getVocerosByConsejo(array $filters = [])
+    {
+        $personas = $this->searchPerson($filters);
+        return $personas->groupBy('committeeName');
+    }
 }
