@@ -10,6 +10,15 @@ class State extends Model
         'countryId',
         'initials',
         'stateName'
-        
     ];
+
+    public function setStateNameAttribute($value)
+    {
+        $this->attributes['stateName'] = mb_strtoupper($value, 'UTF-8');
+    }
+
+    public function setInitialsAttribute($value)
+    {
+        $this->attributes['initials'] = mb_strtoupper($value, 'UTF-8');
+    }
 }

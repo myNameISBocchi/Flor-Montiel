@@ -12,4 +12,9 @@ class Council extends Model
         'cityId',
         'googleMaps',
     ];
+
+    public function setCouncilNameAttribute($value)
+    {
+        $this->attributes['councilName'] = mb_strtoupper($value, 'UTF-8');
+    }
 }

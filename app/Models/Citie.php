@@ -10,4 +10,9 @@ class Citie extends Model
         'stateId',
         'cityName'
     ];
+
+    public function setCityNameAttribute($value)
+    {
+        $this->attributes['cityName'] = mb_strtoupper($value, 'UTF-8');
+    }
 }

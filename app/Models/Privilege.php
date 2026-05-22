@@ -11,4 +11,9 @@ class Privilege extends Model
         'route',
         'status'
     ];
+
+    public function setPrivilegeNameAttribute($value)
+    {
+        $this->attributes['privilegeName'] = mb_strtoupper($value, 'UTF-8');
+    }
 }

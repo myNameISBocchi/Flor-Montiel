@@ -12,5 +12,8 @@ class Comunity extends Model
         'photoComunity',
     ];
 
-    
+    public function setComunityNameAttribute($value)
+    {
+        $this->attributes['comunityName'] = mb_strtoupper($value, 'UTF-8');
+    }
 }

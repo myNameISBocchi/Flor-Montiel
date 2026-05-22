@@ -11,6 +11,11 @@ class Committee extends Model
         'parentId'
     ];
 
+    public function setCommitteeNameAttribute($value)
+    {
+        $this->attributes['committeeName'] = mb_strtoupper($value, 'UTF-8');
+    }
+
     public function parent(){
         return $this->belongsTo(Committee::class, 'parentId');
     }
