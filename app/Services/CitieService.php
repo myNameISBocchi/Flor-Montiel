@@ -48,8 +48,16 @@ class CitieService{
     }
 
     public function getCityByStateId($stateId){
-
-    }
+    $idStateDecrypted = Crypt::decrypt($stateId);
+    $cities = Citie::select('id', 'cityName')
+        ->where('stateId', '=', $idStateDecrypted)
+        ->get()
+        ->map(function($item){
+            $item->id = Crypt::encrypt($item->id);
+            return $item;
+        });
+    return $cities;
+}
 }
 
 ?>

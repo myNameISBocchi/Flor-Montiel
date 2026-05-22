@@ -89,4 +89,19 @@ class stateController extends Controller
         }
 
     }
+
+    public function getStateByCountryId(string $countryId){
+    try {
+        $error = 0;
+        $results = $this->stateService->getStateByCountryId($countryId);
+        $res = [
+            'error' => $error,
+            'msg' => Message::findAll(),
+            'results' => $results
+        ];
+        return response()->json($res, 200);
+    } catch (\Exception $th) {
+        return response()->json(['error' => 500, 'msg' => Message::errorServer()], 500);
+    }
+}
 }

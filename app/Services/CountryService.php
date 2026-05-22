@@ -60,9 +60,18 @@ class CountryService{
         }
     }
 
-    public function getCountryByState($stateId){
-
+    public function getCountryByStateId($stateId){
+    $idDecrypted = Crypt::decrypt($stateId);
+    $state = State::select('countryId')->where('id', '=', $idDecrypted)->first();
+    if($state){
+        $country = Country::select('id', 'countryName')->where('id', '=', $state->countryId)->first();
+        if($country){
+            $country->id = Crypt::encrypt($country->id);
+            return $country;
+        }
     }
+    return null;
+}
 }
 
 

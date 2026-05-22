@@ -94,5 +94,20 @@ class citieController extends Controller
 
     }
 
+    public function getCityByStateId($stateId){
+    try {
+        $error = 0;
+        $results = $this->citieService->getCityByStateId($stateId);
+        $res = [
+            'error' => $error,
+            'msg' => Message::findAll(),
+            'results' => $results
+        ];
+        return response()->json($res, 200);
+    } catch (\Exception $th) {
+        return response()->json(['error' => 500, 'msg' => Message::errorServer()], 500);
+    }
+}
+
 
 }

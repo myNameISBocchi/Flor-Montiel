@@ -57,9 +57,17 @@ class StateService{
 
     }
 
-    public function getStateByCountry(string $countryId){
-
-    }
+    public function getStateByCountryId(string $countryId){
+    $idCountryDecrypted = Crypt::decrypt($countryId);
+    $states = State::select('id', 'stateName')
+        ->where('countryId', '=', $idCountryDecrypted)
+        ->get()
+        ->map(function($item){
+            $item->id = Crypt::encrypt($item->id);
+            return $item;
+        });
+    return $states;
+}
     
 }
 

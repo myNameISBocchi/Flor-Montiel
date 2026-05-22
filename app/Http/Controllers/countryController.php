@@ -106,4 +106,25 @@ class countryController extends Controller
             return response()->json(['error' => 500, 'msg' => Message::errorServer()]);
         }
     }
+
+    public function getCountryByStateId($stateId){
+    try {
+        $error = 0;
+        $result = $this->countryService->getCountryByStateId($stateId);
+        if($result){
+            $res = [
+                'error' => $error,
+                'msg' => Message::findById(),
+                'results' => $result
+            ];
+            return response()->json($res, 200);
+        } else {
+            return response()->json(['error' => 1, 'msg' => 'No encontrado'], 404);
+        }
+    } catch (\Exception $th) {
+        return response()->json(['error' => 500, 'msg' => Message::errorServer()], 500);
+    }
+}
+
+    
 }

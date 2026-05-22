@@ -65,17 +65,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/countries', [countryController::class, 'store'])->name('countries.store');
     Route::put('/countries/{id}', [countryController::class, 'update'])->name('countries.update');
     Route::delete('/countries/{id}', [countryController::class, 'delete'])->name('countries.destroy');
+    Route::get('/country/get-by-state/{stateId}', [countryController::class, 'getCountryByStateId'])->name('country.by_state');
     
     Route::get('/states', [stateController::class, 'findAll'])->name('states.index');
     Route::post('/states', [stateController::class, 'store'])->name('states.store');
     Route::put('/states/{id}', [stateController::class, 'update'])->name('states.update');
     Route::delete('/states/{id}', [stateController::class, 'delete'])->name('states.destroy');
+    Route::get('/state/get-by-country/{countryId}', [stateController::class, 'getStateByCountryId'])->name('state.by_country');
     
     Route::get('/cities', [citieController::class, 'findAll'])->name('cities.index');
     Route::post('/cities', [citieController::class, 'store'])->name('cities.store');
     Route::put('/cities/{id}', [citieController::class, 'update'])->name('cities.update');
     Route::delete('/cities/{id}', [citieController::class, 'delete'])->name('cities.destroy');
+    Route::get('/citie/get-by-state/{stateId}', [citieController::class, 'getCityByStateId'])->name('citie.by_state');
     
     Route::get('/reporte/voceros', [ReportController::class, 'imprimirVoceros'])->name('reports.voceros');
 });
-
