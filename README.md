@@ -59,7 +59,7 @@ Crea tu archivo de configuración: cp .env.example .env
 
 Genera la clave de seguridad: php artisan key:generate
 
-y ingresa tambien el: php aritsan storage:link
+y ingresa tambien el: php artisan storage:link
 
 Activa Apache y MySQL en XAMPP, crea la base de datos y ejecuta: php artisan migrate:fresh --seed
 
